@@ -1,0 +1,96 @@
+<%- include("../partials/head", { title }) %>
+<%- include("../partials/header") %>
+
+<main class="page-shell">
+  <section class="page-intro" aria-labelledby="dashboard-title">
+    <div>
+      <p class="eyebrow">Expense dashboard</p>
+      <h1 id="dashboard-title">Keep spending in view.</h1>
+      <p class="intro-copy">Add everyday purchases and see your running total at a glance.</p>
+    </div>
+
+    <article class="total-card" aria-label="Total spending">
+      <span>Total recorded</span>
+      <strong><%= formatCurrency(total) %></strong>
+      <small><%= expenses.length %> <%= expenses.length === 1 ? "expense" : "expenses" %></small>
+    </article>
+  </section>
+
+  <% if (statusMessage) { %>
+    <div class="status-message" role="status"><%= statusMessage %></div>
+  <% } %>
+
+  <div class="dashboard-grid">
+    <section class="panel add-panel" aria-labelledby="add-expense-title">
+      <div class="panel-heading">
+        <p class="eyebrow">New entry</p>
+        <h2 id="add-expense-title">Add an expense</h2>
+      </div>
+      <%- include("_form", {
+        formAction: "/expenses",
+        submitLabel: "Add expense",
+        cancelHref: "",
+        fieldPrefix: "add",
+        form,
+        errors,
+      }) %>
+    </section>
+
+    <section class="panel expenses-panel" aria-labelledby="recent-expenses-title">
+      <div class="panel-heading list-heading">
+        <div>
+          <p class="eyebrow">History</p>
+          <h2 id="recent-expenses-title">Recent expenses</h2>
+        </div>
+        <% if (expenses.length > 0) { %>
+          <span class="record-count"><%= expenses.length %> total</span>
+        <% } %>
+      </div>
+
+      <% if (expenses.length === 0) { %>
+        <div class="empty-state">
+          <span class="empty-icon" aria-hidden="true">$</span>
+          <h3>No expenses yet</h3>
+          <p>Your first expense will appear here after you add it.</p>
+        </div>
+      <% } else { %>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Description</th>
+                <th scope="col">Category</th>
+                <th scope="col">Date</th>
+                <th scope="col" class="amount-column">Amount</th>
+                <th scope="col"><span class="visually-hidden">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% expenses.forEach((expense) => { %>
+                <tr>
+                  <td data-label="Description"><strong><%= expense.description %></strong></td>
+                  <td data-label="Category"><span class="category-badge"><%= expense.category %></span></td>
+                  <td data-label="Date"><time datetime="<%= expense.expense_date %>"><%= formatDate(expense.expense_date) %></time></td>
+                  <td data-label="Amount" class="expense-amount"><%= formatCurrency(expense.amount) %></td>
+                  <td class="row-actions">
+                    <a class="text-action" href="/expenses/<%= expense.id %>/edit">Edit</a>
+                    <form
+                      class="delete-form"
+                      method="post"
+                      action="/expenses/<%= expense.id %>/delete"
+                      data-expense-description="<%= expense.description %>"
+                    >
+                      <button class="text-action danger-action" type="submit">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+    </section>
+  </div>
+</main>
+
+<%- include("../partials/footer") %>

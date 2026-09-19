@@ -1,0 +1,24 @@
+<%- include("../partials/head", { title }) %>
+<%- include("../partials/header") %>
+
+<main class="page-shell narrow-shell">
+  <section class="panel edit-panel" aria-labelledby="edit-expense-title">
+    <div class="panel-heading">
+      <a class="back-link" href="/expenses">&larr; Back to expenses</a>
+      <p class="eyebrow">Update entry</p>
+      <h1 id="edit-expense-title">Edit expense</h1>
+      <p class="panel-copy">Make your changes, then save the updated expense.</p>
+    </div>
+
+    <%- include("_form", {
+      formAction: `/expenses/${expenseId}`,
+      submitLabel: "Save changes",
+      cancelHref: "/expenses",
+      fieldPrefix: "edit",
+      form,
+      errors,
+    }) %>
+  </section>
+</main>
+
+<%- include("../partials/footer") %>
