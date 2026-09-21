@@ -1,3 +1,13 @@
 node_modules/
 .env
 *.log
+
+
+# Terraform local files
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfplan
+crash.log
+crash.*.log
